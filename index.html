@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: rgb(37, 63, 88);
+        background-size: cover;
+        background-repeat: no-repeat;
+        color: rgb(255, 255, 255);
+    }
+
+    .space-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: radial-gradient(rgb(0, 0, 0) 0%, transparent 120%);
+        z-index: -1;
+    }
+    
+    .stars {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Ccircle cx='1' cy='1' r='1' fill='white' /%3E%3C/svg%3E");
+        animation: starsAnimation 10s linear infinite;
+        pointer-events: none;
+    }
+    
+    @keyframes starsAnimation {
+        from {
+            transform: translateY(0);
+        }
+        to {
+            transform: translateY(-100%);
+        }
+    }
+    
+    .heart-container {
+        position: relative;
+        cursor: pointer;
+        
+    }    
+    .heart {
+        position: relative;
+        width: 100px;
+        height: 90px;
+        
+        
+    }
+    .heart:before,
+    .heart:after {
+        position: absolute;
+        content: "";
+        left: 50px;
+        top: 0;
+        width: 50px;
+        height: 80px;
+        background-color: rgb(36, 0, 165);
+        border-radius: 50px 50px 0 0;
+        transform: rotate(-45deg);
+        transform-origin: 0 100%;
+        box-shadow: -10px 10px 90px #ffffff;
+    }
+    
+    .heart:after {
+        left: 0;
+        transform: rotate(45deg);
+        transform-origin: 100% 100%;
+        /*reflejo*/
+        box-shadow: -10px 10px 90px #ffffff;
+    }
+    
+    .message {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .question-container {
+        margin-top: 20px;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 10px;
+    }
+    
+    .button-yes {
+        background-color: #4caf50;
+        color: white;
+    }
+    
+    .button-no {
+        background-color: #f44336;
+        color: white;
+    }
+    
+    #spotifyEmbed {
+        display: none;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 280px;
+        height: 210px;
+        margin: 20px;
+    }
+    
+    @keyframes heartbeat {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+    
+    .heart.clicked {
+        animation: heartbeat 0.6s ease-in-out infinite;
+    }
+    
+    .star {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background-color: rgb(255, 255, 255);
+        opacity: 0.5;
+    }
+    
+</style>
+  <title>Corazon latiendo</title>
+</head>
+<body>
+    <div class="space-background">
+        <div class="stars"></div>
+        <div class="star"></div>
+      </div>
+      <div class="heart-container">
+        <div class="heart clicked"></div>
+    </div>
+    <div class="message">
+        <p id="messageText">Hola 😄!!!!!</p>
+    </div>
+    <div class="question-container" id="questionContainer">
+        <p>¿Quieres decirme algo?</p>
+        <button class="button button-yes" onclick="openWhatsApp()">Sí</button>
+        <button class="button button-no" onclick="hideInput()">No</button>
+    </div>
+    <div id="spotifyEmbed"></div>
+  <script>
+    
+
+    function createStar() {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = `${Math.random() * window.innerWidth}px`;
+      star.style.top = `${Math.random() * window.innerHeight}px`;
+      document.body.appendChild(star);
+
+      const speed = Math.random() * 2 + 1;
+
+      setInterval(() => {
+        const currentLeft = parseFloat(star.style.left);
+        const newLeft = currentLeft + speed;
+        if (newLeft > window.innerWidth) {
+          star.style.left = '0px';
+          star.style.top = `${Math.random() * window.innerHeight}px`;
+        } else {
+          star.style.left = `${newLeft}px`;
+        }
+      }, 8); 
+    }
+
+    for (let i = 0; i < 100; i++) {
+      createStar();
+    }
+    const messageText = document.getElementById('messageText');
+    const questionContainer = document.getElementById('questionContainer');
+    const spotifyEmbed = document.getElementById('spotifyEmbed');
+    const messages = [
+        'No he tenido la oportunidad de hablar contigo y se que suena extraño 😬',
+        'Y mas por que no nos conocemos al 100% si a caso un 20% ',
+        'Y aun que no sepa nada de ti 😶',
+        'Quiero decirte que me gustas ',
+        'O bueno te me haces linda 🙃,',
+        'Se que después de esto las cosas no volverán a hacer igual las cosas',
+        'Y ademas que esta será la única vez que te diga esto ☺️ <br> No quiero causarte ninguna incomodidad ni hacer que te sientas mal.💀 <br> Simplemente sentí que necesitaba expresar lo que estaba en mi mente.🤗  <br> y respetaré tus decisiones y tu espacio.💐',
+        'Tenia miedo de arruinar nuestra amistad si te confesaba mis sentimientos👤. Ya que nuestra amistad es demasiado valiosa para mí como para arriesgarla.🤩',
+        'No estaba seguro de cómo te sentirías al respecto, y no quería ponerte en una posición incómoda.',
+        'Quería estar seguro de lo que siento antes de decírtelo, y eso me llevó tiempo👨‍🦳',
+        'No quiero que nada cambie, quiero que todo siga igual',
+        'Dame la oportunidad de hacerte feliz como nadie mas',
+        'Se bloqueará esta página 🔐 despues de esto 🤯 <br> "Gracias por verlo ❣️" ',
+    ];
+    let messageIndex = 0;
+
+    // Restaura el contador de clics desde el almacenamiento local
+    let clickCount = parseInt(localStorage.getItem('clickCount')) || 0;
+
+    const heart = document.querySelector('.heart');
+    heart.addEventListener('click', () => {
+        if (clickCount < 13) { // veces clicks
+            heart.classList.add('clicked');
+            
+            if (messageIndex === 12) {
+                messageText.innerHTML = messages[messageIndex];
+                questionContainer.style.display = 'flex';
+            } else {
+                messageText.innerHTML = messages[messageIndex];
+
+            }
+            messageIndex = (messageIndex + 1) % messages.length;
+    
+            spotifyEmbed.style.display = 'block';
+    
+            if (!iframe.getAttribute('src')) {
+                iframe.src = 'https://open.spotify.com/embed/playlist/6EcvXjnEkuxNGDm6XJVaQA';
+                spotifyEmbed.appendChild(iframe);
+            }
+    
+            clickCount++; // Incrementa el contador de clics
+    
+            // Almacena el contador de clics en el almacenamiento local
+            localStorage.setItem('clickCount', clickCount);
+        }
+    });
+
+    const playlistTitle = 'Tu Título de Playlist'; 
+    const iframe = document.createElement('iframe');
+    iframe.title = `Spotify Embed: ${playlistTitle}`;
+    iframe.width = '100%';
+    iframe.height = '160'; /* Ajusta la altura del reproductor incrustado */
+    iframe.frameBorder = '0';
+    iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture; controls';
+    iframe.loading = 'lazy';
+    spotifyEmbed.appendChild(iframe);
+
+
+    function openWhatsApp() {
+        window.open('https://wa.me/5525338668', '_blank');
+    }
+
+    
+
+    function hideInput() {
+        questionContainer.style.display = 'none';
+        messageText.textContent = "Okey, gracias";
+    }
+ /*
+ Alí Torres
+
+Espero que estés bien. Quería tomarme un momento para disculparme sinceramente por lo que te dije recientemente. Me doy cuenta de que mis palabras pueden haber sido inoportunas o incómodas, y eso no era mi intención en absoluto.
+Entiendo que hablar de mis sentimientos puede haber sido repentino o sorprendente, y no tenía intención de poner presión sobre ti ni de crear una situación incómoda. Reconozco que todos tenemos nuestras propias emociones y procesos, y respeto completamente tus sentimientos al respecto.
+En retrospectiva, podría haber manejado la situación de una manera más considerada y delicada. Me disculpo si te hice sentir incómodo o presionado en cualquier forma.
+Valoramos nuestra relación y la amistad que compartimos, y no quiero que esta situación cause ningún tipo de tensión entre nosotros. Espero que podamos seguir adelante y hablar de cualquier inquietud que puedas tener.
+Gracias por tu comprensión y paciencia. Si deseas hablar sobre esto o cualquier otro tema, estoy aquí para escucharte. Nuestra amistad significa mucho para mí, y haré todo lo posible para asegurarme de que nos sintamos cómodos y respetados mutuamente.
+
+Atentamente,
+LALA :)
+
+*/
+
+  </script>
+
+</body>
+</html>
